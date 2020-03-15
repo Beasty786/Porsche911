@@ -263,15 +263,13 @@ function car(x, y) {
     graphics.save();
     graphics.translate(6,0);
 
-    graphics.translate((-frameNumber*0.01)%12,0);
+    graphics.translate((-frameNumber*0.015)%13,0);
     graphics.scale(0.5,.5);
     graphics.save();
     graphics.translate(0.3,-.8);
 
     carName();
     graphics.restore();
-
-
 
     graphics.save();
 
