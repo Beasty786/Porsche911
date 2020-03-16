@@ -1,21 +1,21 @@
 
 
+/*
+ * Below I created an array of size 2000, which translates to 1000 rain drops
+ * Each even index is the x coordinate of a rain drop
+ * Each odd index is the y coordinate of a rain drop
+ * In the forLoop I
+ */
+
 let rectangles = new Array(2000);
 
-for(var i = 0 ; i < 1000 ; i+=2){
+for(var i = 0 ; i < 1000 ; i+=2){ // notice we increment by 2 and not 1 just so that we can fit 1000 rain drops easier
 
-    let x = Math.random()*16 -8;
-    let y = Math.random()*12 - 6;
+    let x = Math.random()*16 -8; // Here it's pretty useless to have the drops of screen on the sides but this gives us few rain drops
+    let y = Math.random()*12 - 6; // here a random number so that we have rain drops on and off screen so that when the rain drops we always have drops on the screen
     rectangles[i] = x;
     rectangles[i+1] = y;
 }
-
-
-
-
-
-
-
 
 
 var canvas;   // The canvas that is used as the drawing surface
@@ -51,28 +51,12 @@ function drawWorld() {
     car();
     rain();
 
-    graphics.save();
-    graphics.translate(2,2);
-    graphics.scale(.75,.75);
-    clouds(-0.003,-1);
-    graphics.restore();
 
 
 }
 
-function carName() {
-    graphics.save();
 
-    graphics.scale(0.02 , 0.02);
-    graphics.transform(.02,1,1,.02,0,0);
-    graphics.rotate(Math.PI/2);
-    graphics.font = " 12px Brush Script MT";
-    graphics.fillStyle = "rgb(255, 0, 0)";
-    graphics.fillText("Porsche 911",-50,0);
 
-    graphics.restore();
-
-}
 
 /**
  * This method is called just before each frame is drawn.  It updates the modeling
@@ -230,6 +214,7 @@ function init() {
 }
 
 
+
 function theWheelI() {
     var innerRadius = 0.3333;
 
@@ -241,7 +226,7 @@ function theWheelI() {
     graphics.fillStyle = "grey";
     graphics.beginPath();
 
-    graphics.save();
+    graphics.save(); // we save and restore due to the inside rotate function
 
     for(var i = 0 ; i < 3 ; i++){
         graphics.rotate(Math.PI/3);
@@ -258,12 +243,9 @@ function theWheelI() {
     graphics.restore();
 
 
-
 }
-
 function theWheelO() {
 
-    var outerRadius = .5;
     graphics.save();
     graphics.rotate( (frameNumber*0.75) * Math.PI/90 );
     graphics.fillStyle = "black";
@@ -271,6 +253,14 @@ function theWheelO() {
     graphics.fill();
     graphics.restore();
 }
+
+/*
+ * Our wheel is made up of 2 parts...
+ * The outer wheel which is the black part
+ * The inner wheel which is the grey with red linings
+ * The below function however draws both wheels which isn't a good idea but hey...
+ */
+
 function drawWheel() {
 
     graphics.save();
@@ -290,29 +280,46 @@ function drawWheel() {
     graphics.restore();
 }
 
+/*
+ * Below we just Making text to place on the car Nothing hectic
+ */
+function carName() {
+    graphics.save();
+
+    graphics.scale(0.02 , 0.02);
+    graphics.transform(.02,1,1,.02,0,0); // this is to perform a mirror effect so that it is properly alligned
+    graphics.rotate(Math.PI/2);
+    graphics.font = " 12px Brush Script MT";
+    graphics.fillStyle = "rgb(255, 0, 0)";
+    graphics.fillText("Porsche 911",-50,0);
+
+    graphics.restore();
+}
 
 
 /*
  * This is the biggest part of this Lab
  * Here I drew a Car, an old Porsche 911 using the lineTo method only
- * We then scaled the whole car to fit into the scene appropriatly
+ * We then scaled the whole car to fit into the scene appropriately
  */
 function car(x, y) {
     graphics.save();
 
-    graphics.translate(6,-2);
+    graphics.translate(6,-2); // This is where the car begins moving from, notice the 6 means it starts off the screen and thats what we want
     graphics.lineWidth = .03;
-    graphics.strokeWidth = 3;
-    graphics.strokeStyle = "rgb(6, 106, 153)";
+    graphics.strokeStyle = "rgb(6, 106, 153)"; // we didn't fill the car we only stroked it using this blue color
     graphics.translate((-frameNumber*0.015)%13,0);
     graphics.scale(0.3,.3);
 
     graphics.save();
-    graphics.translate(0.3,-.8);
+    graphics.translate(0.3,-.8); // Here we place the label of the car i.e "Porsche 911" on the body of the car
     carName();
     graphics.restore();
 
     graphics.save();
+
+    // We begin drawing our car here using the lineTo method from the back wheel
+
     graphics.beginPath();
     graphics.moveTo(2.415 , -1.2);
     graphics.lineTo(-2.5 , -1.2);
@@ -379,7 +386,7 @@ function car(x, y) {
     // drawing front light
     graphics.moveTo(-3 ,0 );
     graphics.lineTo(-3.27 , -.33);
-    graphics.lineTo(-3.67 , -.33)
+    graphics.lineTo(-3.67 , -.33);
 
     //Drawing the inside window
     graphics.moveTo(.35 , 1.228);
@@ -443,36 +450,55 @@ function car(x, y) {
     graphics.restore();
 }
 
+
 /*
 * Because The road is in the example scene... Here we just drew an a rectangle from one side of the screen to the other
-* */
+*/
 function road() {
     graphics.save();
     graphics.fillStyle = "rgb(45, 68, 105)";
     graphics.fillRect(-4, -2.9,8 ,.5 );
     graphics.restore();
 }
+
+/*
+ * Here we draw our background with a gradient color and nothing hectic
+ * The background is just rectangle with canvas dimensions
+ */
 function backGround() {
-
     graphics.save();
-
     let my_gradient = graphics.createLinearGradient(0, 3, 0, -3);
     my_gradient.addColorStop(0, "black");
     my_gradient.addColorStop(1, "white");
-
-   graphics.fillStyle = my_gradient;
- //  graphics.fillStyle = "rgb(196, 165, 180";
-    graphics.fillRect(-4, -3 ,8,12);
+    graphics.fillStyle = my_gradient; // we set the fill style to the type of gradient we've created
+    graphics.fillRect(-4, -3 ,8,12); // this is the entire background
     graphics.restore();
+
+    /*
+     * we add  moving clouds as part of our background.
+     * These clouds have different sizes different speeds and moving in opposite directions
+     */
 
     graphics.save();
     graphics.translate(0,3);
     clouds(0.005,1);
-
     graphics.restore();
+
+    graphics.save();
+    graphics.translate(2,2);
+    graphics.scale(.75,.75);
+    clouds(-0.003,-1);
+    graphics.restore();
+
 }
 
-
+/*
+ * In the function below we create the rain effect
+ * Each rain drop here is nothing but a very tiny rectangle
+ * notice in the forLoop there's a variable called rand which is a random number from 0 to one
+ * This random variable is responsible to giving each rain drop a different size.
+ * The reason for this is so that some rain drops appear to be near while others appear to be far
+ */
 
 function rain() {
     var rainWidth = .006;
@@ -482,9 +508,8 @@ function rain() {
     graphics.translate(0,-(frameNumber*0.15)%6);
     graphics.translate(0,3);
     graphics.fillStyle = "black";
-    //graphics.fillRect(x,y,rainWidth,.2);
-   // rectangles[0];
-    for(var i = 0 ; i < 1000 ; i+=2){
+
+    for(var i = 0 ; i < 2000 ; i+=2){
         let rand = Math.random();
         graphics.fillRect(rectangles[i],rectangles[i+1],rainWidth*rand,rainHeight*rand);
     }
@@ -492,17 +517,27 @@ function rain() {
     graphics.restore();
 }
 
-function clouds(speed,x) {
+
+/*
+ * We then go on to create the cloud
+ * here we just used ellipses and manipulated their positions
+ * Note the use of the begin and close path methods
+ * These are so that when the cloud moves it does grow from on place but rather moves as a whole
+ * There are 2 parameters here, The speed and the direction
+ * a negative direction will cause the cloud to move towards the left and a positive direction will cause it to move to the left
+ */
+
+function clouds(speed,direction) {
+
+    direction = direction > 0? direction/direction : -1*(direction/direction); // This line ensures that the direction doesn't affect the speed of the cloud
 
     graphics.save();
-    graphics.translate(-5*x , 0);
+    graphics.translate(-5*direction , 0);
     graphics.scale(.75,.75);
     graphics.strokeStyle = "black";
     graphics.fillStyle = "rgb(191, 184, 187)";
 
    graphics.translate((frameNumber*speed)%20,0);
-    graphics.save();
-    //cloud one
     graphics.beginPath();
     graphics.ellipse(-1.5,0,1,.5,0,0,2*Math.PI,false);
     graphics.ellipse(-2.5,0,1,.5,0,0,2*Math.PI,false);
@@ -512,9 +547,7 @@ function clouds(speed,x) {
     graphics.ellipse(-.1,-.5,.5,.25,0,0,2*Math.PI,false);
     graphics.ellipse(-.3,-.3,.75,.5,0,0,2*Math.PI,false);
     graphics.closePath();
-    graphics.stroke();
     graphics.fill();
-    graphics.restore();
 
     graphics.restore();
 
