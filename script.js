@@ -1,5 +1,23 @@
 
 
+let rectangles = new Array(2000);
+
+for(var i = 0 ; i < 1000 ; i+=2){
+
+    let x = Math.random()*16 -8;
+    let y = Math.random()*12 - 6;
+    rectangles[i] = x;
+    rectangles[i+1] = y;
+}
+
+
+
+
+
+
+
+
+
 var canvas;   // The canvas that is used as the drawing surface
 var graphics; // The 2D graphics context for drawing on the canvas.
 
@@ -24,8 +42,21 @@ function drawWorld() {
 
     // TODO: Draw the content of the scene.
    // rotatingRect();  // (DELETE THIS EXAMPLE)
+
+
+    // graphics.fillStyle = "rgb(213, 237, 232)";
+    // graphics.fillRect(-4,3,8,6);
+     backGround();
+     road();
     car();
-    //carName();
+    rain();
+
+    graphics.save();
+    graphics.translate(2,2);
+    graphics.scale(.75,.75);
+    clouds(-0.003,-1);
+    graphics.restore();
+
 
 }
 
@@ -36,7 +67,7 @@ function carName() {
     graphics.transform(.02,1,1,.02,0,0);
     graphics.rotate(Math.PI/2);
     graphics.font = " 12px Brush Script MT";
-    graphics.fillStyle = "rgb(240, 192, 60)";
+    graphics.fillStyle = "rgb(255, 0, 0)";
     graphics.fillText("Porsche 911",-50,0);
 
     graphics.restore();
@@ -259,25 +290,33 @@ function drawWheel() {
     graphics.restore();
 }
 
+
+
+/*
+ * This is the biggest part of this Lab
+ * Here I drew a Car, an old Porsche 911 using the lineTo method only
+ * We then scaled the whole car to fit into the scene appropriatly
+ */
 function car(x, y) {
     graphics.save();
-    graphics.translate(6,0);
 
+    graphics.translate(6,-2);
+    graphics.lineWidth = .03;
+    graphics.strokeWidth = 3;
+    graphics.strokeStyle = "rgb(6, 106, 153)";
     graphics.translate((-frameNumber*0.015)%13,0);
-    graphics.scale(0.5,.5);
+    graphics.scale(0.3,.3);
+
     graphics.save();
     graphics.translate(0.3,-.8);
-
     carName();
     graphics.restore();
 
     graphics.save();
-
-    graphics.lineWidth = .03;
-    graphics.strokeWidth = 3;
-    graphics.strokeStyle = "rgb(6, 106, 153)";
     graphics.beginPath();
     graphics.moveTo(2.415 , -1.2);
+    graphics.lineTo(-2.5 , -1.2);
+    graphics.moveTo(2.415,-1.2);
     graphics.lineTo(3 , -1.2);
     graphics.lineTo(3.17, -1.17);
     graphics.lineTo(3.5 , -1);
@@ -395,14 +434,88 @@ function car(x, y) {
     graphics.lineTo(1 , -.19);
     graphics.lineTo(1, -.17);
 
-    //One Missing line
-    graphics.moveTo(-1.5, -1.1);
-    graphics.lineTo(1.5 , -1.1);
 
     graphics.stroke();
     graphics.closePath();
     graphics.restore();
     drawWheel();
+
     graphics.restore();
 }
 
+/*
+* Because The road is in the example scene... Here we just drew an a rectangle from one side of the screen to the other
+* */
+function road() {
+    graphics.save();
+    graphics.fillStyle = "rgb(45, 68, 105)";
+    graphics.fillRect(-4, -2.9,8 ,.5 );
+    graphics.restore();
+}
+function backGround() {
+
+    graphics.save();
+
+    let my_gradient = graphics.createLinearGradient(0, 3, 0, -3);
+    my_gradient.addColorStop(0, "black");
+    my_gradient.addColorStop(1, "white");
+
+   graphics.fillStyle = my_gradient;
+ //  graphics.fillStyle = "rgb(196, 165, 180";
+    graphics.fillRect(-4, -3 ,8,12);
+    graphics.restore();
+
+    graphics.save();
+    graphics.translate(0,3);
+    clouds(0.005,1);
+
+    graphics.restore();
+}
+
+
+
+function rain() {
+    var rainWidth = .006;
+    var rainHeight = 0.25;
+
+    graphics.save();
+    graphics.translate(0,-(frameNumber*0.15)%6);
+    graphics.translate(0,3);
+    graphics.fillStyle = "black";
+    //graphics.fillRect(x,y,rainWidth,.2);
+   // rectangles[0];
+    for(var i = 0 ; i < 1000 ; i+=2){
+        let rand = Math.random();
+        graphics.fillRect(rectangles[i],rectangles[i+1],rainWidth*rand,rainHeight*rand);
+    }
+
+    graphics.restore();
+}
+
+function clouds(speed,x) {
+
+    graphics.save();
+    graphics.translate(-5*x , 0);
+    graphics.scale(.75,.75);
+    graphics.strokeStyle = "black";
+    graphics.fillStyle = "rgb(191, 184, 187)";
+
+   graphics.translate((frameNumber*speed)%20,0);
+    graphics.save();
+    //cloud one
+    graphics.beginPath();
+    graphics.ellipse(-1.5,0,1,.5,0,0,2*Math.PI,false);
+    graphics.ellipse(-2.5,0,1,.5,0,0,2*Math.PI,false);
+    graphics.ellipse(-3,-.5,1,.5,0,0,2*Math.PI,false);
+    graphics.ellipse(-2.5,-.5,1,.5,0,0,2*Math.PI,false);
+    graphics.ellipse(-1,-.5,1,.5,0,0,2*Math.PI,false);
+    graphics.ellipse(-.1,-.5,.5,.25,0,0,2*Math.PI,false);
+    graphics.ellipse(-.3,-.3,.75,.5,0,0,2*Math.PI,false);
+    graphics.closePath();
+    graphics.stroke();
+    graphics.fill();
+    graphics.restore();
+
+    graphics.restore();
+
+}
